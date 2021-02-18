@@ -1,0 +1,73 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Font Awesome
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+
+// Variables
+@import 'variables';
+
+@import "~admin-lte/build/scss/AdminLTE";
+
+.nodeStats dl {
+    display: inline-flex;
+    dd {
+        padding-right: .2rem;
+        margin: .2rem;
+    }
+    dt {
+        margin: .2rem;
+    }
+}
+.subforums {
+    padding-left: .5em;
+    padding-bottom: 0;
+}
+.dot-sf {
+    margin-right: .2rem;
+}
+
+
+.newIndicator {
+    font-size: 11px;
+    color: #557296;
+    background: #7aa6d6 url(/images/form-button-white-25px.png) repeat-x top;
+    padding: 1px 5px;
+    border: 1px solid #7aa6d6;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-top-right-radius: 0px;
+    -webkit-border-top-right-radius: 0px;
+    -moz-border-radius-topright: 0px;
+    -khtml-border-top-right-radius: 0px;
+    display: block;
+    float: right;
+    position: relative;
+    box-shadow: 1px 1px 3px rgba(0,0,0, 0.25);
+    -webkit-box-shadow: 1px 1px 3px rgba(0,0,0, 0.25);
+    -moz-box-shadow: 1px 1px 3px rgba(0,0,0, 0.25);
+    -khtml-box-shadow: 1px 1px 3px rgba(0,0,0, 0.25);
+    margin-right: -25px;
+
+    span {
+        background-color: #7aa6d6;
+        border-top-right-radius: 3px;
+        -webkit-border-top-right-radius: 3px;
+        -moz-border-radius-topright: 3px;
+        -khtml-border-top-right-radius: 3px;
+        position: absolute;
+        top: -4px;
+        right: -1px;
+        width: 5px;
+        height: 4px;
+    }
+}
+#ts {
+    position: absolute;
+    left: 120px;
+}
