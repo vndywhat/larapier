@@ -1,15 +1,24 @@
 ## Demo
-
 https://larapier.space/
 
 ## About
 Попытка переписать с нуля legacy код движка TorrentPier II
 
-## Install
+## Requirements
+* Basic Laravel requirements
+* Nginx (recommended) or Apache
+* PHP 7.4 or higher
+* MySQL 5.7 or higher
+* Redis
 
-* Copy .env.example to .env and setup database settings
-* RUN: composer update
-* RUN: php artisan migrate:refresh --seed
+## Install
+* Copy .env.example to .env and setup database and redis settings
+```
+cd path/to/project
+composer update
+php artisan migrate --seed
+php artisan queue:work
+```
 
 ## User
 * Login & password: admin
