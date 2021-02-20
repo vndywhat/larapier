@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', $topic->title)
+
 @section('navigation')
     <div class="container">
         <div class="row mb-2">
@@ -27,9 +29,6 @@
 						<i class="fas fa-reply"></i>
 						Ответить на тему
 					</a>
-                    {{--<a href="posting.php?mode=reply&amp;t=1">
-                        <img src="{{ asset('images/reply.gif') }}" alt="Ответить на тему">
-                    </a>--}}
                 </div>
                 <div class="float-right">
                     {{ $posts->links() }}
@@ -43,4 +42,13 @@
         </div>
 		@include('topics.partials.quick-reply', ['topic' => $topic])
     </div>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 pt-2">
+				<div class="float-right">
+					{{ $posts->links() }}
+				</div>
+			</div>
+		</div>
+	</div>
 @endsection

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title',  $forum->title)
+
 @section('navigation')
     <div class="container">
         <div class="row mb-2">

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Post as Model;
 use App\Models\Topic;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Builder;
 
 class PostRepository extends CoreRepository
 {
@@ -17,7 +18,7 @@ class PostRepository extends CoreRepository
     public function findByTopic(Topic $topic)
     {
         $posts = Model::where('topic_id', $topic->id)
-            ->with('author')
+            ->with('author', 'torrent')
             ->orderBy('created_at')
             ->paginate(10);
 

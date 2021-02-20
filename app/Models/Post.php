@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Facades\BbCode;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -48,4 +49,9 @@ class Post extends Model
         return $this->belongsTo(User::class, 'poster_id')
             ->withCount(['posts']);
     }
+
+    public function torrent()
+	{
+		return $this->hasOne(Torrent::class);
+	}
 }

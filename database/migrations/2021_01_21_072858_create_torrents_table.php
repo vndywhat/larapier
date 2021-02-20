@@ -21,6 +21,7 @@ class CreateTorrentsTable extends Migration
             $table->bigInteger('topic_id')->index('fk_torrents_topics1_idx');
             $table->bigInteger('forum_id')->index('fk_torrents_forums1_idx');
             $table->bigInteger('user_id')->index('fk_torrents_users1_idx');
+			$table->integer('moderated_by')->nullable()->index('moderated_by');
             $table->string('file_name');
             $table->float('size', 10, 0);
             $table->integer('seeders')->default(0);
@@ -33,7 +34,6 @@ class CreateTorrentsTable extends Migration
             $table->bigInteger('speed_up')->nullable();
             $table->bigInteger('speed_down')->nullable();
             $table->dateTime('moderated_at')->nullable();
-            $table->integer('moderated_by')->nullable()->index('moderated_by');
             $table->timestamps();
         });
     }

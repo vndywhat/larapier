@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Профиль пользователя ' . $profile->username)
+
 @section('navigation')
     <div class="container">
         <div class="row mb-2">

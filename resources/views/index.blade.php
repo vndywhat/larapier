@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Главная')
+
 @section('content')
     <div class="container">
         <div class="row">
@@ -94,7 +96,7 @@
                                                 </a>,
                                             </span>
                                             <span class="last_time">
-                                                {{ $forum->lastPost->created_at->format('d.m.Y H:s') }}
+                                                {{ $forum->lastPost->created_at->format('d.m.Y H:i') }}
                                             </span>
                                         </p>
                                     </div>

@@ -5,7 +5,7 @@ namespace App\Helpers;
 class TorrentTools
 {
 
-    public static function humanSize($size, $rounder = null, $min = null, $space = '&nbsp;')
+    public static function humanSize($size, $rounder = null, $min = null, $space = ' ')
     {
         static $sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         static $rounders = [0, 0, 0, 2, 3, 3, 3, 3, 3];
