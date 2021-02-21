@@ -2,45 +2,46 @@
 
 namespace App\Uploader;
 
-use Illuminate\Http\UploadedFile;
+use App\Models\Attachment;
 use SandFox\Bencode\Bencode;
 use App\Exceptions\FileUploadException;
 
 class TorrentUploader extends Uploader
 {
 	private float $totalLength = 0;
+	private array $decodedTorrent = [];
 
 	public function process()
     {
 		$this->checkTorrent();
 
-		dd($this->file->getFileInfo());
+		return $this->save();
 
     }
 
 	/**
-	 * @throws FileUploadException
+	 * @throws FileUploadException|\Illuminate\Contracts\Filesystem\FileNotFoundException
 	 */
 	private function checkTorrent(): void
 	{
-		if(!$torrent = Bencode::decode($this->openFile())) {
+		if(!$this->decodedTorrent = Bencode::decode($this->file->get())) {
 			throw new FileUploadException(151);
 		}
 
-		$this->checkTorrentInfo($torrent);
+		$this->checkTorrentInfo();
 
-		$torrent = $this->toggleDht($torrent);
+		$this->checkLength();
 
-		$this->checkLength($torrent);
+		$this->toggleDht();
 	}
 
 	/**
-	 * @param array $torrent
+	 * Checking key "info" in decoded torrent file
 	 * @throws FileUploadException
 	 */
-	private function checkTorrentInfo(array $torrent): void
+	private function checkTorrentInfo(): void
 	{
-		$torrentInfo = $torrent['info'] ?? [];
+		$torrentInfo = $this->decodedTorrent['info'] ?? [];
 
 		if (!isset($torrentInfo['name'], $torrentInfo['piece length'], $torrentInfo['pieces']) || \strlen($torrentInfo['pieces']) % 20 != 0) {
 			throw new FileUploadException(152);
@@ -48,34 +49,51 @@ class TorrentUploader extends Uploader
 	}
 
 	/**
-	 *
-	 * @param array $torrent
-	 * @return array
+	 * If DHT is disabled, make the torrent private.
+	 * @return void
 	 */
-	private function toggleDht(array $torrent): array
+	private function toggleDht(): void
 	{
 		if(!config('torrent.DHT')) {
-			$torrent['info']['private'] = (int) 1;
-			\File::replace($this->file->getRealPath(), Bencode::encode($torrent));
+			$this->decodedTorrent['info']['private'] = (int) 1;
+			\File::replace($this->file->getRealPath(), Bencode::encode($this->decodedTorrent));
 		}
-
-		return $torrent;
 	}
 
 	/**
-	 * @param array $torrent
+	 * @see https://wiki.theory.org/BitTorrentSpecification#Metainfo_File_Structure
 	 * @throws FileUploadException
 	 */
-	private function checkLength(array $torrent): void
+	private function checkLength(): void
 	{
-		if (isset($torrent['info']['length'])) {
-			$this->totalLength = (float)$torrent['info']['length'];
-		} elseif (isset($torrent['info']['files']) && \is_array($torrent['info']['files'])) {
-			foreach ($torrent['info']['files'] as $fn => $f) {
+		if (isset($this->decodedTorrent['info']['length'])) {
+			$this->totalLength = (float)$this->decodedTorrent['info']['length'];
+		} elseif (isset($this->decodedTorrent['info']['files']) && \is_array($this->decodedTorrent['info']['files'])) {
+			foreach ($this->decodedTorrent['info']['files'] as $fn => $f) {
 				$this->totalLength += (float)$f['length'];
 			}
 		} else {
 			throw new FileUploadException(152);
 		}
+	}
+
+	/**
+	 * Saves the file
+	 * @return Attachment
+	 */
+	private function save(): Attachment
+	{
+		$filename = (config('attachment.add_site_name'))
+			? '[' . config('app.domain') . ']' . $this->file->hashName()
+			: $this->file->hashName();
+
+		$path = $this->file->storeAs('torrents', $filename);
+
+		return Attachment::create([
+			'filename' => $filename,
+			'extension' => $this->file->getClientOriginalExtension(),
+			'mime_type' => $this->file->getMimeType(),
+			'file_size' => $this->file->getSize(),
+		]);
 	}
 }

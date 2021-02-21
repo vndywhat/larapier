@@ -26,7 +26,7 @@ abstract class Uploader
 	//abstract public function process(): Model;
 	/**
 	 * Проверка файла, переименование, сохранение на диске и в Database
-	 * должен вернуть Model
+	 * должен вернуть App\Models\Attachment
 	 * @return mixed
 	 */
 	abstract public function process();
@@ -40,18 +40,11 @@ abstract class Uploader
 	 */
 	public static function getUploader(UploadedFile $file)
 	{
-		dd($file->getMimeType());
-
 		$uploader = self::$mimeTypes[$file->getMimeType()] ?? null;
 
-		if (!isset($uploader)) {
+		if (!$uploader) {
 			throw new FileUploadException(101);
 		}
 		return (new $uploader($file));
-	}
-
-	protected function openFile(): string
-	{
-		return \File::get($this->file->getRealPath());
 	}
 }

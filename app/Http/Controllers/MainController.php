@@ -25,6 +25,7 @@ class MainController extends Controller
 		try {
 			$uploadedFile = Uploader::getUploader($request->file('document'))
 				->process();
+			dd($uploadedFile);
 		} catch (FileUploadException $exception) {
 			dd($exception->getMessage());
 		}
