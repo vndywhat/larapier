@@ -6,7 +6,6 @@ use App\Http\Requests\TopicReplyRequest;
 use App\Models\Forum;
 use App\Models\Post;
 use App\Models\Topic;
-use App\Repositories\PostRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,14 +13,13 @@ class TopicController extends Controller
 {
     /**
      * @param int $topicId
-     * @param PostRepository $postRepository
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function show(int $topicId, PostRepository $postRepository)
+    public function show(int $topicId)
     {
         if(!$topic = Topic::where('id', $topicId)->with(['forum', 'author'])->first()) abort(404);
 
-        $posts = $postRepository->findByTopic($topic);
+        $posts = $topic->posts()->paginate(5);
 
         return view('topics.show', compact('topic', 'posts'));
     }

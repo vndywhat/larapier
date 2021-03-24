@@ -31,5 +31,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Peer extends Model
 {
-
+	protected $fillable = [
+		'peer_id', 'md5_peer_id', 'topic_id', 'torrent_id',
+		'user_id', 'info_hash', 'ip', 'port', 'client',
+		'seeder', 'releaser', 'tor_type', 'uploaded',
+		'downloaded', 'remain', 'speed_up', 'speed_down'
+	];
 }

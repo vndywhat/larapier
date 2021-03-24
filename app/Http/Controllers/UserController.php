@@ -9,7 +9,7 @@ class UserController extends Controller
 {
     public function show(int $userId)
     {
-        $profile = User::where('id', $userId)->withCount('posts', 'topics')->first();
+        $profile = User::where('id', $userId)->withCount(['posts', 'topics'])->first();
 
         return view('users.profile', compact('profile'));
     }

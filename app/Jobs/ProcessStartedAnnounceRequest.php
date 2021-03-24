@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\History;
 use App\Models\Peer;
 use App\Models\Torrent;
 use App\Models\User;
@@ -56,7 +55,7 @@ class ProcessStartedAnnounceRequest implements ShouldQueue
             $peer = new Peer();
         }
 
-        // Get history information
+        /*// Get history information
         $history = History::where('info_hash', '=', $this->queries['info_hash'])->where('user_id', '=', $this->user->id)->first();
 
         // If no History record found then create one
@@ -64,7 +63,7 @@ class ProcessStartedAnnounceRequest implements ShouldQueue
             $history = new History();
             $history->user_id = $this->user->id;
             $history->info_hash = $this->queries['info_hash'];
-        }
+        }*/
 
         $realUploaded = $this->queries['uploaded'];
         $realDownloaded = $this->queries['downloaded'];

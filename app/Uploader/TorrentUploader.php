@@ -8,7 +8,7 @@ use App\Exceptions\FileUploadException;
 
 class TorrentUploader extends Uploader
 {
-	private float $totalLength = 0;
+	private float $totalLength = 0.0;
 	private array $decodedTorrent = [];
 
 	public function process()
@@ -43,7 +43,8 @@ class TorrentUploader extends Uploader
 	{
 		$torrentInfo = $this->decodedTorrent['info'] ?? [];
 
-		if (!isset($torrentInfo['name'], $torrentInfo['piece length'], $torrentInfo['pieces']) || \strlen($torrentInfo['pieces']) % 20 != 0) {
+		if (!isset($torrentInfo['name'], $torrentInfo['piece length'], $torrentInfo['pieces'])
+			|| \strlen($torrentInfo['pieces']) % 20 != 0) {
 			throw new FileUploadException(152);
 		}
 	}
@@ -68,7 +69,8 @@ class TorrentUploader extends Uploader
 	{
 		if (isset($this->decodedTorrent['info']['length'])) {
 			$this->totalLength = (float)$this->decodedTorrent['info']['length'];
-		} elseif (isset($this->decodedTorrent['info']['files']) && \is_array($this->decodedTorrent['info']['files'])) {
+		} elseif (isset($this->decodedTorrent['info']['files'])
+				&& \is_array($this->decodedTorrent['info']['files'])) {
 			foreach ($this->decodedTorrent['info']['files'] as $fn => $f) {
 				$this->totalLength += (float)$f['length'];
 			}

@@ -3,7 +3,6 @@
 namespace App\Uploader;
 
 use App\Exceptions\FileUploadException;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 
 abstract class Uploader
@@ -23,11 +22,10 @@ abstract class Uploader
 		$this->file = $file;
 	}
 
-	//abstract public function process(): Model;
 	/**
 	 * Проверка файла, переименование, сохранение на диске и в Database
 	 * должен вернуть App\Models\Attachment
-	 * @return mixed
+	 * @return \App\Models\Attachment
 	 */
 	abstract public function process();
 

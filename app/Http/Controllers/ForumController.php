@@ -24,16 +24,16 @@ class ForumController extends Controller
         return view('topics.add', compact('forum'));
     }
 
-    public function storeTopic(AddTopicRequest $form, Forum $forum)
+    public function storeTopic(AddTopicRequest $validatedForm, Forum $forum)
     {
         /**
          * @var Topic $topic
          */
         $topic = Topic::create([
             'forum_id' => $forum->id,
-            'title' => $form->title,
+            'title' => $validatedForm->title,
             'poster_id' => Auth::id(),
-            'type' => $form->type,
+            'type' => $validatedForm->type,
         ]);
         /**
          * @var Post $post
@@ -41,19 +41,28 @@ class ForumController extends Controller
         $post = $topic->posts()->create([
             'forum_id' => $topic->forum_id,
             'poster_id' => $topic->poster_id,
-            'text' => $form->message,
-            'text_html' => $form->message,
+            'text' => $validatedForm->message,
+            'text_html' => $validatedForm->message,
         ]);
 
         if($post) {
-            $topic->first_post_id = $topic->last_post_id = $post->id;
-            $topic->last_post_time = $post->created_at;
-            $topic->save();
+        	$topic->update([
+        		'first_post_id' => $post->id,
+        		'last_post_id' => $post->id,
+				'last_post_time' => $post->created_at,
+			]);
         }
+		$forum->update([
+			'last_post_id' => $post->id,
+			'topics_count' => $forum->topics_count + 1,
+			'posts_count' => $forum->posts_count + 1,
+		]);
 
+        /*$forum->increment('topics_count');
         $forum->last_post_id = $post->id;
         $forum->topics_count += 1;
-        $forum->posts_count += 1;
+        $forum->posts_count += 1;*/
+
         $forum->save();
 
         return redirect()

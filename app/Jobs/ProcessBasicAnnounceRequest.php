@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Exceptions\AnnounceException;
-use App\Models\History;
 use App\Models\Peer;
 use App\Models\Torrent;
 use App\Models\User;
@@ -65,16 +64,16 @@ class ProcessBasicAnnounceRequest implements ShouldQueue
             }
             $peer = new Peer();
         }
-
+		$ghost = false;
         // Get history information
-        $history = History::where('info_hash', '=', $this->queries['info_hash'])->where('user_id', '=', $this->user->id)->first();
+        /*$history = History::where('info_hash', '=', $this->queries['info_hash'])->where('user_id', '=', $this->user->id)->first();
 
         // If no History record found then create one
         if ($history === null) {
             $history = new History();
             $history->user_id = $this->user->id;
             $history->info_hash = $this->queries['info_hash'];
-        }
+        }*/
 
         $realUploaded = $this->queries['uploaded'];
         $realDownloaded = $this->queries['downloaded'];
@@ -118,7 +117,26 @@ class ProcessBasicAnnounceRequest implements ShouldQueue
         }
 
         // Peer Update
-        $peer->peer_id = $this->queries['peer_id'];
+		$peer->update([
+			'peer_id' => $this->queries['peer_id'],
+			'md5_peer_id' => \md5($this->queries['peer_id']),
+			'topic_id' => $this->torrent->topic_id,
+			'torrent_id' => $this->torrent->id,
+			'user_id' => $this->user->id,
+			'info_hash' => $this->queries['info_hash'],
+			'ip' => $this->queries['ip-address'],
+			'port' => $this->queries['port'],
+			'client' => $this->queries['user-agent'],
+			'seeder' => $this->queries['left'] == 0,
+			'releaser' => ($this->torrent->user_id === $this->user->id),
+			'tor_type' => $this->torrent->tor_type,
+			'uploaded' => $realUploaded,
+			'downloaded' => $realDownloaded,
+			'remain' => $this->queries['left'],
+			'speed_up' => $speed_up,
+			'speed_down' => $speed_down,
+		]);
+        /*$peer->peer_id = $this->queries['peer_id'];
         $peer->md5_peer_id = \md5($this->queries['peer_id']);
         $peer->topic_id = $this->torrent->topic_id;
         $peer->torrent_id = $this->torrent->id;
@@ -135,7 +153,7 @@ class ProcessBasicAnnounceRequest implements ShouldQueue
         $peer->remain = $this->queries['left'];
         $peer->speed_up = $speed_up;
         $peer->speed_down = $speed_down;
-        $peer->save();
+        $peer->save();*/
         // End Peer Update
 
         // History Update

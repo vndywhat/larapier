@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "7.4",
+        "php": "^7.4",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -69,11 +69,5 @@
             "@php artisan ide-helper:generate",
             "@php artisan ide-helper:meta"
         ]
-    },
-	"repositories": [
-		{
-			"type": "composer",
-			"url": "https://nova.laravel.com"
-		}
-	]
+    }
 }
